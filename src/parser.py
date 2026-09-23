@@ -1,6 +1,4 @@
-import re
-
-
+import re 
 def parsed_log(lines):
     """Yield one record per failed-password line in `lines`."""
     pattern = re.compile(r'''
