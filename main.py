@@ -1,11 +1,11 @@
 import sys, logging 
-from pathlib import Path
-
+import pandas as pd
 
 
 from src.data_loader import load_tensile_data
-from src.parser import parsed_log
+from src.preprocessing import clean_data
 from src.analysis import IP_count
+
 
 
 def get_path_from_the_arg():
@@ -14,33 +14,26 @@ def get_path_from_the_arg():
     logging.error("Usage: python main.py <file_path>")
     sys.exit(1)
 
-def check_for_csv(file_path):
-    path_object= Path(file_path)
-    if path_object.suffix.lower() != '.csv':
-        logging.error("This is not a CSV file.")
-        sys.exit(1)
 
-    return path_object
             
 
 
 
 def main():
     file_path = get_path_from_the_arg()
-    csv_file = check_for_csv(file_path)
 
 
     try:
-        missing_cols = load_tensile_data(csv_file)
+        raw_df = load_tensile_data(file_path)
         logging.info('success!')
-    except ValueError as e:
+    except ValueError or FileNotFoundError as e:
         logging.error(f"Error: {e}")
         sys.exit(1)
-    
 
-    #records = parsed_log(lines)
-    #counts = IP_count(records)
-    #print(counts)
+    processed_df, summary = clean_data(raw_df, width_mm=2.0, thickness_mm=2.0)
+    processed_df.to_csv('results/processed_6061.csv', index=False)
+    logging.info(summary)
+    
 
 
 if __name__ == "__main__":
