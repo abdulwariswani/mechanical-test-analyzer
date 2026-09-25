@@ -1,11 +1,9 @@
-import sys, logging 
-import pandas as pd
-import os 
+import sys, logging, os
 
 
 from src.data_loader import load_tensile_data
 from src.preprocessing import clean_data
-from src.analysis import IP_count
+from src.mechanical_properties import compute_properties
 
 
 
@@ -40,6 +38,8 @@ def main():
     processed_df, summary = clean_data(raw_df, width_mm=2.0, thickness_mm=2.0)
     processed_df.to_csv('results/processed_6061.csv', index=False)
     logging.info(summary)
+
+    compute_properties(processed_df)
     
 
 
