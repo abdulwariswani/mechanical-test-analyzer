@@ -1,5 +1,6 @@
 import sys, logging 
 import pandas as pd
+import os 
 
 
 from src.data_loader import load_tensile_data
@@ -20,7 +21,7 @@ def get_path_from_the_arg():
 
 
 def main():
-    file_path = get_path_from_the_arg()
+    file_path: str = get_path_from_the_arg()
 
 
     try:
@@ -29,6 +30,12 @@ def main():
     except ValueError or FileNotFoundError as e:
         logging.error(f"Error: {e}")
         sys.exit(1)
+
+    directory = os.path.dirname('results/processed_6061.csv')
+    directory = os.path.dirname('results/processed_6061.csv')
+    if directory:
+           os.makedirs(directory, exist_ok=True)
+    
 
     processed_df, summary = clean_data(raw_df, width_mm=2.0, thickness_mm=2.0)
     processed_df.to_csv('results/processed_6061.csv', index=False)

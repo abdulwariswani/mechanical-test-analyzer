@@ -2,6 +2,7 @@ import pandas as pd
 
 
 def clean_data(df, width_mm, thickness_mm):
+    df = df.copy()
     start_count = len(df)
     summary = {}
 
