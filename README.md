@@ -17,7 +17,10 @@ Given a raw CSV of tensile test data (`Time`, `Force`, `Strain`):
 
 ## Installation
 
+This project assumes an existing Python 3.10+ environment (conda or venv).
+To set up a fresh conda environment:
+
 ```bash
-python -m venv .venv
-source .venv/bin/activate       # Windows: .venv\Scripts\activate
+conda create -n mech-test python=3.11
+conda activate mech-test
 pip install -r requirements.txt
