@@ -1,6 +1,7 @@
 import sys, logging, os
 
 
+
 from src.data_loader import load_tensile_data
 from src.preprocessing import clean_data
 from src.mechanical_properties import compute_properties
@@ -39,7 +40,9 @@ def main():
     processed_df.to_csv('results/processed_6061.csv', index=False)
     logging.info(summary)
 
-    compute_properties(processed_df)
+    properties = compute_properties(processed_df)
+    logging.info(f'Properties:{properties}')
+
     
 
 
