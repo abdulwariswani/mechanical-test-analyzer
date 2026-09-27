@@ -19,6 +19,8 @@ from src.data_loader import load_tensile_data
 from src.preprocessing import clean_data
 from src.mechanical_properties import compute_properties
 
+logger = logging.getLogger(__name__)
+
 
 # Specimen geometry for the Al-6061 miniature dogbone (see data/README.md).
 # Update if using a different specimen.
@@ -33,7 +35,7 @@ def get_path_from_the_arg():
     """Return the CSV path from argv, or exit with a usage message."""
     if len(sys.argv) >= 2:
         return sys.argv[1]
-    logging.error("Usage: python main.py <file_path>")
+    logger.error("Usage: python main.py <file_path>")
     sys.exit(1)
 
 
@@ -44,9 +46,9 @@ def main():
     # Stage 2: load raw data (I/O + schema validation).
     try:
         raw_df = load_tensile_data(file_path)
-        logging.info('Loaded raw data successfully.')
+        logger.info('Loaded raw data successfully.')
     except (ValueError, FileNotFoundError) as e:
-        logging.error(f"Error: {e}")
+        logger.error(f"Error: {e}")
         sys.exit(1)
 
     # Ensure output directory exists.
@@ -59,11 +61,11 @@ def main():
         thickness_mm=THICKNESS_MM,
     )
     processed_df.to_csv(OUTPUT_CSV, index=False)
-    logging.info(summary)
+    logger.info(summary)
 
     # Stage 4: mechanical properties.
     properties = compute_properties(processed_df)
-    logging.info(f'Properties: {properties}')
+    logger.info(f'Properties: {properties}')
 
 
 if __name__ == "__main__":

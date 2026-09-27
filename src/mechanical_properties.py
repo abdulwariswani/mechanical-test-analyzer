@@ -19,6 +19,7 @@ Unit conventions:
 import logging
 import numpy as np
 
+logger = logging.getLogger(__name__)
 
 # Fraction of the total strain range assumed elastic when fitting
 # Young's modulus. 5% is a heuristic for metals; refine if E deviates
@@ -107,7 +108,7 @@ def compute_yield_strength(strain, stress, E_MPa, off_set=YIELD_OFFSET):
     crossings = np.where((diff[:-1] > 0) & (diff[1:] <= 0))[0]
 
     if len(crossings) == 0:
-        logging.warning("No yield crossing found: returning UTS as fallback")
+        logger.warning("No yield crossing found: returning UTS as fallback")
         return stress.max()
 
     # Linear interpolation between the two bracketing points.
