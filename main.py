@@ -92,7 +92,7 @@ def main():
     else:
         logger.warning("Work hardening values could not be computed.")
 
-    generate_report(properties,summary,filepath='results/reportsreport.txt',material='Al-6061',condition='T6')
+    generate_report(properties,summary,filepath='results/reports/report.txt',material='Al-6061',condition='T6')
 
 
 
