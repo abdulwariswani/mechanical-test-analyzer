@@ -20,6 +20,7 @@ from src.preprocessing import clean_data
 from src.mechanical_properties import compute_properties
 from src.visualization import generate_all_figures 
 from src.hardening_analysis import compute_work_hardening 
+from src.reporting import generate_report
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,9 @@ def main():
         logger.info(f"work hardening: n={properties['n']:.3f}, K={properties['K_MPa']:.3f} MPa, R²={properties['R2']:.3f}")
     else:
         logger.warning("Work hardening values could not be computed.")
+
+    generate_report(properties,summary,filepath='results/reportsreport.txt',material='Al-6061',condition='T6')
+
 
 
 
