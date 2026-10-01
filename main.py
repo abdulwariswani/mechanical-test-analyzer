@@ -18,6 +18,7 @@ from src.logger import setup_logging
 from src.data_loader import load_tensile_data
 from src.preprocessing import clean_data
 from src.mechanical_properties import compute_properties
+from src.visualization import generate_all_figures 
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +67,18 @@ def main():
     # Stage 4: mechanical properties.
     properties = compute_properties(processed_df)
     logger.info(f'Properties: {properties}')
+
+
+
+    fig_paths = generate_all_figures(
+    processed_df, properties,
+    output_dir='results/figures',
+    material='Al-6061',
+    condition='T6',
+    )
+    logging.info(f"Figures: {fig_paths}")
+
+
 
 
 if __name__ == "__main__":
