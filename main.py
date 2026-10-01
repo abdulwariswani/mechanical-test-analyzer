@@ -19,6 +19,7 @@ from src.data_loader import load_tensile_data
 from src.preprocessing import clean_data
 from src.mechanical_properties import compute_properties
 from src.visualization import generate_all_figures 
+from src.hardening_analysis import compute_work_hardening 
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ def main():
     logger.info(f'Properties: {properties}')
 
 
-
+    # stage 5: visualization
     fig_paths = generate_all_figures(
     processed_df, properties,
     output_dir='results/figures',
@@ -78,6 +79,17 @@ def main():
     )
     logging.info(f"Figures: {fig_paths}")
 
+
+       # stage 6: Work_hardening Analysis
+    hardening_results = compute_work_hardening(processed_df, properties)
+    # Merge into properties so it is available for stage& reporting
+    properties.update(hardening_results)
+    
+    # Log the new values safely
+    if properties.get('n') is not None:
+        logger.info(f"work hardening: n={properties['n']:.3f}, K={properties['K_MPa']:.3f} MPa, R²={properties['R2']:.3f}")
+    else:
+        logger.warning("Work hardening values could not be computed.")
 
 
 

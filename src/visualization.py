@@ -7,7 +7,6 @@ pops up because matplotlib is forced to use its headless Agg backend.
 
 Public functions:
     plot_curve             - single stress-strain curve with YS/UTS marked
-    plot_comparison        - multiple curves overlaid for comparison
     plot_properties_bar    - bar chart of key properties
     generate_all_figures   - convenience wrapper that produces the standard set
 """
@@ -33,7 +32,7 @@ COLOR_CURVE = '#1f77b4'          # matplotlib tab:blue
 COLOR_YIELD = 'red'
 COLOR_UTS = 'orange'
 COLOR_BARS = ['#1f77b4', '#ff7f0e', '#2ca02c']
-GRID_ON = False                  # per blueprint: gridlines off
+GRID_ON = True                 # per blueprint: gridlines off
 FONT_TITLE = 13
 FONT_LABEL = 11
 FONT_ANNOT = 9
@@ -54,7 +53,11 @@ def apply_base_style(ax, title, xlabel, ylabel):
     ax.set_title(title, fontsize=FONT_TITLE)
     ax.set_xlabel(xlabel, fontsize=FONT_LABEL)
     ax.set_ylabel(ylabel, fontsize=FONT_LABEL)
-    ax.grid(GRID_ON, alpha=0.3)
+    ax.grid(GRID_ON)
+    if GRID_ON:
+        ax.grid(True, alpha=0.3)
+    else:
+        ax.grid(False)
     return ax
 
 

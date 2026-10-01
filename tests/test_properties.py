@@ -37,19 +37,26 @@ def test_yield_strength_synthetic():
     stress = np.where(stress > 5.0, 5.0, stress)
     
     # Run the 0.2% offset algorithm
-    stress_yield = compute_yield_strength(strain, stress, E_MPa=1000, off_set=0.002)
+    stress_yield,strain_yield = compute_yield_strength(strain, stress, E_MPa=1000, off_set=0.002)
     
     # VERIFICATION: The offset line intersects the flat 5.0 MPa plateau at exactly 5.0 MPa
     assert stress_yield == pytest.approx(5.0, rel=0.05)
+    assert strain_yield == pytest.approx(0.007, rel=0.05)
+
+
 
 
 
 
 # test3:
 def test_uts():
-    stress = np.array([0, 1, 5, 10, 8, 5])
-    uts = compute_uts(stress)
-    assert uts == 10
+    strain = np.array([0.00, 0.01, 0.02, 0.03, 0.04, 0.05])
+    stress = np.array([0,    1,    5,    10,   8,    5])
+    
+    uts_mpa, uts_strain = compute_uts(strain, stress)
+    
+    assert uts_mpa == 10
+    assert uts_strain == 0.03   # strain where stress peaks
 
 # test4:
 def test_elongation():

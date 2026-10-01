@@ -116,12 +116,16 @@ def compute_yield_strength(strain, stress, E_MPa, off_set=YIELD_OFFSET):
     d1 = diff[idx]
     d2 = diff[idx + 1]
     stress_yield = stress[idx] + (-d1 / (d2 - d1)) * (stress[idx + 1] - stress[idx])
-    return stress_yield
+    strain_yield = strain[idx] + (-d1 / (d2 - d1)) * (strain[idx+1] - strain[idx])
+    return stress_yield , strain_yield
 
 
-def compute_uts(stress):
+def compute_uts(strain, stress):
     """Ultimate tensile strength = maximum stress value (MPa)."""
-    return stress.max()
+    uts_idx = np.argmax(stress)
+    uts_MPa = stress[uts_idx]
+    uts_strain = strain[uts_idx]
+    return uts_MPa, uts_strain  
 
 
 def compute_elongation(strain):
@@ -169,15 +173,17 @@ def compute_properties(processed_df):
     stress = processed_df['stress_MPa'].to_numpy()
 
     E_MPa = compute_young_modulus(strain, stress)
-    YS = compute_yield_strength(strain, stress, E_MPa)
-    UTS = compute_uts(stress)
+    YS,strain_yield = compute_yield_strength(strain, stress, E_MPa)
+    uts_MPa,uts_strain = compute_uts(strain,stress)
     elong = compute_elongation(strain)
     tough = compute_toughness(strain, stress)
 
     return {
         'E_GPa': E_MPa / 1000.0,
         'Yield_MPa': YS,
-        'UTS_MPa': UTS,
+        'UTS_MPa': uts_MPa,
+        'uts_strain': uts_strain,
         'Elongation_pct': elong * 100.0,
         'Toughness_MJ_m3': tough,
+        'yield_strain': strain_yield,  
     }
