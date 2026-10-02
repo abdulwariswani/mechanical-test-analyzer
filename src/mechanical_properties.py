@@ -86,6 +86,16 @@ def compute_yield_strength(strain, stress, E_MPa, off_set=YIELD_OFFSET):
     We look for the point where (sigma - sigma_offset) changes sign from
     positive to non-positive, then linearly interpolate for precision.
 
+    Once the yield stress is known, the corresponding strain is derived
+    from the offset line's own equation:
+
+        eps_yield = sigma_yield / E + off_set
+
+    Note: this is *not* simply sigma_yield / E. The +off_set term is the
+    strain shift that defines the offset line; omitting it places the
+    yield marker on the extended elastic line rather than on the actual
+    curve.
+
     Parameters
     ----------
     strain : np.ndarray
@@ -97,9 +107,11 @@ def compute_yield_strength(strain, stress, E_MPa, off_set=YIELD_OFFSET):
 
     Returns
     -------
-    float
-        Yield stress in MPa. Falls back to max stress if no crossing is
-        detected (should be rare; logged as a warning).
+    (sigma_yield, eps_yield) : tuple of float
+        sigma_yield is the yield stress in MPa. Falls back to max stress
+        if no crossing is detected (rare; logged as a warning).
+        eps_yield is the strain coordinate of the yield point on the
+        curve, in decimal (unitless).
     """
     offset_line = E_MPa * (strain - off_set)
     diff = stress - offset_line
